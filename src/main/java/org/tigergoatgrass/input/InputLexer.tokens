@@ -5,6 +5,7 @@ NEWLINE=4
 AFFINITY=5
 NAME=6
 WS=7
+INT=8
 '['=1
 ']'=2
 ','=3

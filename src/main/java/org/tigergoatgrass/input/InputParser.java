@@ -20,11 +20,13 @@ public class InputParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		OPENROW=1, CLOSEROW=2, SEPARATOR=3, NEWLINE=4, AFFINITY=5, NAME=6, WS=7;
+		OPENROW=1, CLOSEROW=2, SEPARATOR=3, NEWLINE=4, AFFINITY=5, NAME=6, WS=7, 
+		INT=8;
 	public static final int
-		RULE_start = 0, RULE_items = 1, RULE_matrix = 2, RULE_row = 3;
+		RULE_start = 0, RULE_boatCapacity = 1, RULE_items = 2, RULE_matrix = 3, 
+		RULE_row = 4;
 	public static final String[] ruleNames = {
-		"start", "items", "matrix", "row"
+		"start", "boatCapacity", "items", "matrix", "row"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -32,7 +34,7 @@ public class InputParser extends Parser {
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, "OPENROW", "CLOSEROW", "SEPARATOR", "NEWLINE", "AFFINITY", "NAME", 
-		"WS"
+		"WS", "INT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -84,6 +86,9 @@ public class InputParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class StartContext extends ParserRuleContext {
+		public BoatCapacityContext boatCapacity() {
+			return getRuleContext(BoatCapacityContext.class,0);
+		}
 		public ItemsContext items() {
 			return getRuleContext(ItemsContext.class,0);
 		}
@@ -110,10 +115,52 @@ public class InputParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(8); 
+			setState(10); 
+			boatCapacity();
+			setState(11); 
 			items();
-			setState(9); 
+			setState(12); 
 			matrix();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class BoatCapacityContext extends ParserRuleContext {
+		public TerminalNode INT() { return getToken(InputParser.INT, 0); }
+		public TerminalNode NEWLINE() { return getToken(InputParser.NEWLINE, 0); }
+		public BoatCapacityContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_boatCapacity; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InputListener ) ((InputListener)listener).enterBoatCapacity(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InputListener ) ((InputListener)listener).exitBoatCapacity(this);
+		}
+	}
+
+	public final BoatCapacityContext boatCapacity() throws RecognitionException {
+		BoatCapacityContext _localctx = new BoatCapacityContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_boatCapacity);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(14); 
+			match(INT);
+			setState(15); 
+			match(NEWLINE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -155,34 +202,34 @@ public class InputParser extends Parser {
 
 	public final ItemsContext items() throws RecognitionException {
 		ItemsContext _localctx = new ItemsContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_items);
+		enterRule(_localctx, 4, RULE_items);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(11); 
+			setState(17); 
 			match(OPENROW);
-			setState(12); 
+			setState(18); 
 			match(NAME);
-			setState(17);
+			setState(23);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SEPARATOR) {
 				{
 				{
-				setState(13); 
+				setState(19); 
 				match(SEPARATOR);
-				setState(14); 
+				setState(20); 
 				match(NAME);
 				}
 				}
-				setState(19);
+				setState(25);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(20); 
+			setState(26); 
 			match(CLOSEROW);
-			setState(21); 
+			setState(27); 
 			match(NEWLINE);
 			}
 		}
@@ -224,24 +271,24 @@ public class InputParser extends Parser {
 
 	public final MatrixContext matrix() throws RecognitionException {
 		MatrixContext _localctx = new MatrixContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_matrix);
+		enterRule(_localctx, 6, RULE_matrix);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(26); 
+			setState(32); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(23); 
+				setState(29); 
 				row();
-				setState(24); 
+				setState(30); 
 				match(NEWLINE);
 				}
 				}
-				setState(28); 
+				setState(34); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==OPENROW );
@@ -285,32 +332,32 @@ public class InputParser extends Parser {
 
 	public final RowContext row() throws RecognitionException {
 		RowContext _localctx = new RowContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_row);
+		enterRule(_localctx, 8, RULE_row);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(30); 
+			setState(36); 
 			match(OPENROW);
-			setState(31); 
+			setState(37); 
 			match(AFFINITY);
-			setState(36);
+			setState(42);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SEPARATOR) {
 				{
 				{
-				setState(32); 
+				setState(38); 
 				match(SEPARATOR);
-				setState(33); 
+				setState(39); 
 				match(AFFINITY);
 				}
 				}
-				setState(38);
+				setState(44);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(39); 
+			setState(45); 
 			match(CLOSEROW);
 			}
 		}
@@ -326,18 +373,19 @@ public class InputParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\t,\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\3\2\3\2\3\2\3\3\3\3\3\3\3\3\7\3\22\n\3\f\3\16\3\25"+
-		"\13\3\3\3\3\3\3\3\3\4\3\4\3\4\6\4\35\n\4\r\4\16\4\36\3\5\3\5\3\5\3\5\7"+
-		"\5%\n\5\f\5\16\5(\13\5\3\5\3\5\3\5\2\2\6\2\4\6\b\2\2*\2\n\3\2\2\2\4\r"+
-		"\3\2\2\2\6\34\3\2\2\2\b \3\2\2\2\n\13\5\4\3\2\13\f\5\6\4\2\f\3\3\2\2\2"+
-		"\r\16\7\3\2\2\16\23\7\b\2\2\17\20\7\5\2\2\20\22\7\b\2\2\21\17\3\2\2\2"+
-		"\22\25\3\2\2\2\23\21\3\2\2\2\23\24\3\2\2\2\24\26\3\2\2\2\25\23\3\2\2\2"+
-		"\26\27\7\4\2\2\27\30\7\6\2\2\30\5\3\2\2\2\31\32\5\b\5\2\32\33\7\6\2\2"+
-		"\33\35\3\2\2\2\34\31\3\2\2\2\35\36\3\2\2\2\36\34\3\2\2\2\36\37\3\2\2\2"+
-		"\37\7\3\2\2\2 !\7\3\2\2!&\7\7\2\2\"#\7\5\2\2#%\7\7\2\2$\"\3\2\2\2%(\3"+
-		"\2\2\2&$\3\2\2\2&\'\3\2\2\2\')\3\2\2\2(&\3\2\2\2)*\7\4\2\2*\t\3\2\2\2"+
-		"\5\23\36&";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\n\62\4\2\t\2\4\3"+
+		"\t\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\4\3\4\3\4\3"+
+		"\4\7\4\30\n\4\f\4\16\4\33\13\4\3\4\3\4\3\4\3\5\3\5\3\5\6\5#\n\5\r\5\16"+
+		"\5$\3\6\3\6\3\6\3\6\7\6+\n\6\f\6\16\6.\13\6\3\6\3\6\3\6\2\2\7\2\4\6\b"+
+		"\n\2\2/\2\f\3\2\2\2\4\20\3\2\2\2\6\23\3\2\2\2\b\"\3\2\2\2\n&\3\2\2\2\f"+
+		"\r\5\4\3\2\r\16\5\6\4\2\16\17\5\b\5\2\17\3\3\2\2\2\20\21\7\n\2\2\21\22"+
+		"\7\6\2\2\22\5\3\2\2\2\23\24\7\3\2\2\24\31\7\b\2\2\25\26\7\5\2\2\26\30"+
+		"\7\b\2\2\27\25\3\2\2\2\30\33\3\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2\32\34"+
+		"\3\2\2\2\33\31\3\2\2\2\34\35\7\4\2\2\35\36\7\6\2\2\36\7\3\2\2\2\37 \5"+
+		"\n\6\2 !\7\6\2\2!#\3\2\2\2\"\37\3\2\2\2#$\3\2\2\2$\"\3\2\2\2$%\3\2\2\2"+
+		"%\t\3\2\2\2&\'\7\3\2\2\',\7\7\2\2()\7\5\2\2)+\7\7\2\2*(\3\2\2\2+.\3\2"+
+		"\2\2,*\3\2\2\2,-\3\2\2\2-/\3\2\2\2.,\3\2\2\2/\60\7\4\2\2\60\13\3\2\2\2"+
+		"\5\31$,";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

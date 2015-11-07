@@ -15,7 +15,11 @@ grammar Input;
 import InputLexer;
 
 start
-    :   items matrix
+    :   boatCapacity items matrix
+    ;
+
+boatCapacity
+    :   INT NEWLINE
     ;
 
 items

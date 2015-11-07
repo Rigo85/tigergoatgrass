@@ -16,8 +16,11 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.tigergoatgrass.input.Problem;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 
 public class Solution {
@@ -77,57 +80,85 @@ public class Solution {
 
     public ArrayList<Moves> validMoves() {
         ArrayList<Moves> moves = new ArrayList<>();
+        ArrayList<Integer> sameShoreThanBoatMan = new ArrayList<>();
+
+        sameShoreThanBoatMan.addAll(IntStream.range(1, items.size())
+                .filter(i -> items.get(i).equals(items.get(0))).boxed().map(i -> i - 1)
+                .collect(Collectors.toList()));
 
         //boatman traveling alone.
-        if (canMove(0, items) && (path.isEmpty() || path.get(path.size() - 1).getItem() != -1)) {
-            moves.add(new Moves(new ArrayList<Integer>() {{
-                add(0);
-            }}));
+        if (canMove(new ArrayList<>(), sameShoreThanBoatMan) && !isWayBack(new ArrayList<Integer>() {{
+            add(-1);
+        }})) {
+            ArrayList<Integer> toMove = new ArrayList<>();
+            toMove.add(0);
+            moves.add(new Moves(toMove));
         }
 
+        final Stream<List<Integer>> combs = Combinations.getCombinationsStream(sameShoreThanBoatMan, problem.getBoatCapacity());
+
         //boatman traveling with others
-        IntStream.range(1, items.size()).filter(i -> items.get(i).equals(items.get(0))).forEach(i -> {
-            //create valid movement if can move and isn't the way back.
-            if (canMove(i, items) && (path.isEmpty() || path.get(path.size() - 1).getItem() != i - 1)) {
-                moves.add(new Moves(new ArrayList<Integer>() {{
-                    add(0);
-                    add(i);
-                }}));
+        combs.forEach(c -> {
+            ArrayList<Integer> group = new ArrayList<>();
+            group.addAll(c);
+            ArrayList<Integer> group2 = new ArrayList<>();
+            group2.addAll(c.stream().map(x -> x + 1).collect(Collectors.toList()));
+            if (canStayTogether(group) && canMove(group, sameShoreThanBoatMan) && !isWayBack(group2)) {
+                group2.add(0, 0);
+                moves.add(new Moves(group2));
             }
         });
 
         return moves;
     }
 
+    private boolean isWayBack(ArrayList<Integer> group) {
+        return !path.isEmpty() && path.get(path.size() - 1).getItems().equals(group);
+    }
+
     public void applyMoves(Moves moves) {
+        AtomicBoolean b = new AtomicBoolean(true);
         IntStream.range(0, moves.getSteps().size()).forEach(x -> {
             int pos = moves.getSteps().get(x);
-            boolean b = !items.get(pos);
+            b.set(!items.get(pos));
             items.remove(pos);
-            items.add(pos, b);
-
-            if (moves.getSteps().size() == 1 && moves.getSteps().get(0) == 0) //saving an empty trip.
-                path.add(new Trip(problem, -1, !b));
-            else if (moves.getSteps().get(x) != 0)                            //saving the trip(of course the boatman is in there).
-                path.add(new Trip(problem, pos - 1, !b));
+            items.add(pos, b.get());
         });
 
+        if (isAnEmptyTrip(moves)) {                                 //saving an empty trip.
+            path.add(new Trip(problem, new ArrayList<Integer>() {{
+                add(-1);
+            }}, !b.get()));
+        } else {                                                    //saving the trip(of course the boatman is in there).
+            ArrayList<Integer> group = new ArrayList<>();
+            group.addAll(moves.getSteps().stream().filter(x -> !x.equals(0)).collect(Collectors.toList()));
+            path.add(new Trip(problem, group, !b.get()));
+        }
+
         this.f = fitness();
+    }
+
+    private boolean isAnEmptyTrip(Moves moves) {
+        return moves.getSteps().size() == 1 && moves.getSteps().get(0) == 0;
     }
 
     /**
      * We need to verify that when the boatman travel with some fellows, don't leave the shore in conflict.
      */
-    private boolean canMove(int position, ArrayList<Boolean> state) {
-        for (int i = 0; i < problem.getAffinityMatrix().size() - 1; i++) {
-            if (i != position - 1 && state.get(i + 1).equals(state.get(position))) {
-                for (int j = i + 1; j < problem.getAffinityMatrix().size(); j++) {
-                    if (j != position - 1 && state.get(j + 1).equals(state.get(position))) {
-                        if (problem.affinity(i, j)) return false;
-                    }
-                }
+    private boolean canMove(ArrayList<Integer> toMove, ArrayList<Integer> state) {
+        ArrayList<Integer> remaining = new ArrayList<>();
+        remaining.addAll(state.stream().filter(x -> toMove.stream().allMatch(y -> !y.equals(x))).collect(Collectors.toList()));
+
+        return canStayTogether(remaining);
+    }
+
+    private boolean canStayTogether(ArrayList<Integer> group) {
+        for (int i = 0; i < group.size() - 1; i++) {
+            for (int j = i + 1; j < group.size(); j++) {
+                if (problem.affinity(group.get(i), group.get(j))) return false;
             }
         }
+
         return true;
     }
 

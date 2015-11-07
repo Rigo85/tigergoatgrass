@@ -19,10 +19,12 @@ import java.util.ArrayList;
 
 
 public class Problem {
+    private final int boatCapacity;
     private final ArrayList<String> items;
     private final ArrayList<ArrayList<Boolean>> affinityMatrix;
 
-    public Problem(@NotNull ArrayList<String> items, @NotNull ArrayList<ArrayList<Boolean>> affinityMatrix) {
+    public Problem(int boatCapacity, @NotNull ArrayList<String> items, @NotNull ArrayList<ArrayList<Boolean>> affinityMatrix) {
+        this.boatCapacity = boatCapacity;
         this.items = items;
         this.affinityMatrix = affinityMatrix;
     }
@@ -31,8 +33,8 @@ public class Problem {
         return items;
     }
 
-    public ArrayList<ArrayList<Boolean>> getAffinityMatrix() {
-        return affinityMatrix;
+    public int getBoatCapacity() {
+        return boatCapacity;
     }
 
     public boolean affinity(int row, int col) {
@@ -42,6 +44,9 @@ public class Problem {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        builder.append("----------- Boat Capacity -----------\n");
+        builder.append(boatCapacity);
+        builder.append("\n");
         builder.append("----------- Items -----------\n");
         this.items.stream().forEach(x -> builder.append(String.format("%s ", x)));
         builder.append("\n");

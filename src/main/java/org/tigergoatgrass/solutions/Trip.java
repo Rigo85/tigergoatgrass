@@ -14,28 +14,31 @@ package org.tigergoatgrass.solutions;
 
 import org.tigergoatgrass.input.Problem;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import static org.tigergoatgrass.solutions.Shore.SHORE_A;
 import static org.tigergoatgrass.solutions.Shore.SHORE_B;
 
 
 public class Trip {
-    private final int item;
+    private final ArrayList<Integer> items;
     private final boolean from;
     private final Problem problem;
 
-    public Trip(Problem problem, int item, boolean from) {
-        this.item = item;
+    public Trip(Problem problem, ArrayList<Integer> items, boolean from) {
+        this.items = items;
         this.from = from;
         this.problem = problem;
     }
 
     @Override
     public String toString() {
-        return String.format("%s: from %s to %s",
-                item != -1 ? problem.getItems().get(item) : "Empty", from ? SHORE_A : SHORE_B, !from ? SHORE_A : SHORE_B);
+        final String passenger = items.stream().map(x -> x != -1 ? problem.getItems().get(x-1) : "Empty").collect(Collectors.joining(", "));
+        return String.format("%s: from %s to %s", passenger, from ? SHORE_A : SHORE_B, !from ? SHORE_A : SHORE_B);
     }
 
-    public int getItem() {
-        return item;
+    public ArrayList<Integer> getItems() {
+        return items;
     }
 }

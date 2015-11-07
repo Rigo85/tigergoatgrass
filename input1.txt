@@ -1,3 +1,4 @@
+1
 [Tiger, Goat, Grass]
 [0,X,o]
 [x,0,x]

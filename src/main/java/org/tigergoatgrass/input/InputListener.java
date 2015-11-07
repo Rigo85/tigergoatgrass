@@ -19,6 +19,16 @@ public interface InputListener extends ParseTreeListener {
 	 */
 	void exitStart(@NotNull InputParser.StartContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link InputParser#boatCapacity}.
+	 * @param ctx the parse tree
+	 */
+	void enterBoatCapacity(@NotNull InputParser.BoatCapacityContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link InputParser#boatCapacity}.
+	 * @param ctx the parse tree
+	 */
+	void exitBoatCapacity(@NotNull InputParser.BoatCapacityContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link InputParser#items}.
 	 * @param ctx the parse tree
 	 */

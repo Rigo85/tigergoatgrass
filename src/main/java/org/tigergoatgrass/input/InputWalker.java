@@ -1,6 +1,6 @@
 /**
  * Author Rigoberto Leander Salgado Reyes <rlsalgado2006@gmail.com>
- *
+ * <p>
  * Copyright 2015 by Rigoberto Leander Salgado Reyes.
  * <p>
  * This program is licensed to you under the terms of version 3 of the
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class InputWalker extends InputBaseListener {
 
+    private int boatCapacity = 0;
     private final ArrayList<String> items = new ArrayList<>();
     private final ArrayList<ArrayList<Boolean>> affinityMatrix = new ArrayList<>();
     private final ArrayList<String> errorList = new ArrayList<>();
@@ -58,9 +59,14 @@ public class InputWalker extends InputBaseListener {
     }
 
     @Override
+    public void exitBoatCapacity(@NotNull InputParser.BoatCapacityContext ctx) {
+        this.boatCapacity = Integer.parseInt(ctx.INT().getText());
+    }
+
+    @Override
     public void exitStart(@NotNull InputParser.StartContext ctx) {
         if (errorList.isEmpty())
-            problem = new Problem(items, affinityMatrix);
+            problem = new Problem(boatCapacity, items, affinityMatrix);
     }
 
     public Problem getProblem() {

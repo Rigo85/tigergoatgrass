@@ -29,6 +29,18 @@ public class InputBaseListener implements InputListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBoatCapacity(@NotNull InputParser.BoatCapacityContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBoatCapacity(@NotNull InputParser.BoatCapacityContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterItems(@NotNull InputParser.ItemsContext ctx) { }
 	/**
 	 * {@inheritDoc}

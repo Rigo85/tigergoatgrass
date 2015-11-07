@@ -10,9 +10,9 @@ sourceCompatibility = 1.8
 
 task fatJar(type: Jar) {
     manifest {
-        attributes  'Implementation-Title': 'The Goat',
-                    'Implementation-Version': version,
-                    'Main-Class': 'Main'
+        attributes 'Implementation-Title': 'The Goat',
+                'Implementation-Version': version,
+                'Main-Class': 'Main'
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
